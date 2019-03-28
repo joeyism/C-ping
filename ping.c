@@ -207,8 +207,8 @@ void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr,
         { 
             clock_gettime(CLOCK_MONOTONIC, &time_end); 
               
-            double timeElapsed = ((double)(time_end.tv_nsec - time_start.tv_nsec))/1000000.0;
-            rtt_msec = ((time_end.tv_sec-time_start.tv_sec) * 1000.0 + timeElapsed); 
+            double timeElapsed = ((double)(time_end.tv_nsec - time_start.tv_nsec))/1000000.0; // nano -> ms
+            rtt_msec = (time_end.tv_sec-time_start.tv_sec) * 1000.0 + timeElapsed; 
             total_rtt_msec += rtt_msec;
             moving_rtt_msec = shift(moving_rtt_msec, moving_window);
             moving_rtt_msec[moving_window-1] = rtt_msec;
@@ -224,8 +224,7 @@ void send_ping(int ping_sockfd, struct sockaddr_in *ping_addr,
                 } 
                 else
                 { 
-                    //printf("%d bytes from %s (h: %s) (%s) msg_seq=%d ttl=%d rtt = %Lf ms.\n", PING_PKT_S, ping_dom, rev_host, ping_ip, msg_count, ttl_val, rtt_msec); 
-                    printf("Ping=%Lfms Avg=%Lfms Mov=%Lfms\n", rtt_msec, total_rtt_msec/(long double) (msg_received_count + 1.0), moving_avg_rtt_msec);
+                    printf("Ping=%Lfms Avg=%Lfms Mov=%Lfms\n", rtt_msec, total_rtt_msec/(long double) (msg_received_count + 2.0), moving_avg_rtt_msec);
   
                     msg_received_count++; 
                 } 
